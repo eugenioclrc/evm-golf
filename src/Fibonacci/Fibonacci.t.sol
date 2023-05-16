@@ -14,7 +14,7 @@ contract FibonacciTest is Test {
     function testFibonacci() public {
         uint256 gasSum;
 
-        for (uint256 i; i < 100; ++i) {
+        for (uint256 i; i < 300; ++i) {
             uint256 gasBefore = gasleft();
             (, bytes memory result) = fibonacci.call(abi.encode(i));
             uint256 gasAfter = gasleft();
@@ -24,7 +24,7 @@ contract FibonacciTest is Test {
             assertEq(result, abi.encode(fib(i)));
         }
 
-        console.log("Average runtime gas: %s", gasSum / 100);
+        console.log("Average runtime gas: %s", gasSum / 300);
 
         uint256 size;
         assembly {
