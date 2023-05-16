@@ -11,11 +11,27 @@ contract FibonacciTest is Test {
         fibonacci = address(HuffDeployer.deploy("Fibonacci/Fibonacci"));
     }
 
-    function testFibonacci(uint256 n) public {
-        vm.assume(n < 100);
+    function testFibonacci() public {
+        uint256 gasSum;
 
-        (, bytes memory result) = fibonacci.call(abi.encode(n));
-        assertEq(result, abi.encode(fib(n)));
+        for (uint256 i; i < 100; ++i) {
+            uint256 gasBefore = gasleft();
+            (, bytes memory result) = fibonacci.call(abi.encode(i));
+            uint256 gasAfter = gasleft();
+
+            gasSum += gasBefore - gasAfter;
+
+            assertEq(result, abi.encode(fib(i)));
+        }
+
+        console.log("Average runtime gas: %s", gasSum / 100);
+
+        uint256 size;
+        assembly {
+            size := extcodesize(sload(fibonacci.slot))
+        }
+
+        console.log("Codesize: %s", size);
     }
 
     function fib(uint256 n) internal pure returns (uint256) {
