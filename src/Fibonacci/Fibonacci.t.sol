@@ -8,7 +8,7 @@ contract FibonacciTest is Test {
     address public fibonacci;
 
     function setUp() public {
-        fibonacci = address(HuffDeployer.deploy("Fibonacci"));
+        fibonacci = address(HuffDeployer.deploy("Fibonacci/Fibonacci"));
     }
 
     function testFibonacci(uint256 n) public {
