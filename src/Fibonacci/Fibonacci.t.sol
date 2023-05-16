@@ -4,17 +4,17 @@ pragma solidity ^0.8.19;
 import "forge-std/Test.sol";
 import "foundry-huff/HuffDeployer.sol";
 
-contract FibonacciGeneratorTest is Test {
-    address public fibonacciGenerator;
+contract FibonacciTest is Test {
+    address public fibonacci;
 
     function setUp() public {
-        fibonacciGenerator = address(HuffDeployer.deploy("FibonacciGenerator"));
+        fibonacci = address(HuffDeployer.deploy("Fibonacci"));
     }
 
     function testFibonacci(uint256 n) public {
         vm.assume(n < 100);
 
-        (, bytes memory result) = fibonacciGenerator.call(abi.encode(n));
+        (, bytes memory result) = fibonacci.call(abi.encode(n));
         assertEq(result, abi.encode(fib(n)));
     }
 
