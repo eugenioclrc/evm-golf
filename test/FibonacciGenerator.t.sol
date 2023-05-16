@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
 import "foundry-huff/HuffDeployer.sol";
@@ -12,8 +12,10 @@ contract FibonacciGeneratorTest is Test {
     }
 
     function testFibonacci(uint256 n) public {
-        (, bytes memory result) = fibonacciGenerator.call("");
-        assertEq(result, abi.encode(n));
+        vm.assume(n < 100);
+
+        (, bytes memory result) = fibonacciGenerator.call(abi.encode(n));
+        assertEq(result, abi.encode(fib(n)));
     }
 
     function fib(uint256 n) internal pure returns (uint256) {
