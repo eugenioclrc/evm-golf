@@ -1,39 +1,30 @@
 #define macro MAIN() = takes (0) returns (0) {
     // Get input from calldata
-    0x00 calldataload dup1 dup1         // [n, n, n]
+    callvalue calldataload            // [n]
 
-    // Check if n == 0
-    iszero                              // [n == 0, n, n]
-    is_zero jumpi                       // [n, n]
-
-    // Check if n == 1
-    0x01 eq                             // [1, n, n]
-    is_one jumpi                        // [n]
-
-    0x01 0x01 0x00                      // [a = 0, b = 1, i = 1, n]
+    // Check if n == 1 or n == 0
+    dup1 0x02 gt                     // [2, n, n]
+    end jumpi                        // [n]
+    0x01
+    dup2
+    dup2 dup1 callvalue                      // [a = 0, b = 1, i = 1, n]
 
     // Loop to n
     loop:
         // c = a + b, a = b, b = c
         dup2 add swap1                  // [a, b, i, n]
         // Increment i
-        swap2 0x01 add swap2            // [a, b, i++, n]
+        swap2 dup5 add swap2            // [a, b, i++, n]
         // Check if i == n
         dup4 dup4 lt                    // [i < n, a, b, i, n]
         // If i < n, loop
         loop jumpi                      // [a, b, i, n]
 
     // Return b
-    swap1 0x00 mstore                   // [a, i, n]
-    0x20 0x00 return                    // [a, i, n]
-
-    // If n == 0, return 0
-    is_zero:                            // [n]
-        0x00 mstore                     // []
-        0x20 0x00 return                // []
+    pop
 
     // If n == 1, return 1
-    is_one:                             // [n]
-        0x00 mstore                     // []
-        0x20 0x00 return                // []
+    end:                             // [n]
+        callvalue mstore                     // []
+        0x20 callvalue return                // []
 }
